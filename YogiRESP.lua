@@ -1,11 +1,15 @@
-local gameName = string.sub(game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name, 1, 11)
+local targetGameName = "Blox Fruits"
+local targetsNames = {["Fruit"] = true, ["Fruit "] = true}
+
+local gameName = string.sub(game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name, 1, #targetGameName)
 local playerGui = game.Players.LocalPlayer.PlayerGui
 
+-- The switch to turn the ESP on/off
 local function createSwitch()
 	local switch
 
 	if (gameName == "Blox Fruits") then
-		-- The settings image button at the right
+		-- The settings image button at the right on Blox Fruits
 		local settings = playerGui.Main.Settings
 
 		-- Creates the ESP switch by making a copy of an existent one
@@ -24,15 +28,13 @@ local function createSwitch()
 			end
 		end)
 	else
-		local gui = playerGui.scrGui
-
 		switch = Instance.new("TextButton")
 		switch.Text = ""
 		switch.BackgroundColor3 = Color3.fromRGB(255, 255, 55)
 		switch.Position = UDim2.new(0.5, 0, 0, 2)
 		switch.AnchorPoint = Vector2.new (0.5, 0)
 		switch.Size = UDim2.fromOffset(70, 25)
-		switch.Parent = gui
+		switch.Parent = playerGui.scrGui
 
 		local label = Instance.new("TextLabel")
 		label.BorderSizePixel = 0
@@ -47,6 +49,7 @@ local function createSwitch()
 	return switch
 end
 
+-- Shows temporarily text at the middle of the screen
 local function toScreen(text, time, color)
 	local label = Instance.new("TextLabel")
 	label.Text = text
@@ -63,7 +66,7 @@ local function toScreen(text, time, color)
 	label.Text = ""
 end
 
--- Adds a Text Label on a thing, you can see it through walls
+-- Adds text to thing, you can see it through walls (ESP)
 local function addLabel(thing, name, color)
 	local name = name or thing.Name
 	local size = UDim2.fromOffset(100, 25)
@@ -82,60 +85,77 @@ local function addLabel(thing, name, color)
 	label.Parent = billboard
 end
 
+-- Creates a screen gui for our script stuff, this can't be removed because createSwitch and toScreen depends on it
 local gui = Instance.new("ScreenGui")
 gui.Name = "scrGui"
 gui.Parent = playerGui
 
+-- Creates the switch to turn the ESP on/off
 local switch = createSwitch()
 
-toScreen("The script has been started", 10, Color3.fromRGB(255, 255, 255))
+toScreen("The script has been started", 10, Color3.fromRGB(0, 255, 0))
 
 -- Variable to keep the connection, so after we can disconnect
 local workspaceConnection
 
-local targetsNames = {["Fruit"] = true, ["Fruit "] = true}
+-- To be called when a fruit spawns (BLOXFRUITS)
+local function fruitSpawned(child) -- Child = Fruit
+	wait(5) -- Wait a little bit because maybe the fruit children weren't created yet (hypothesis)
+
+	local meshesName -- Spawned fruits have their name on a MeshPart
+
+	-- The MeshPart is a children of the fruit and the name starts with "Meshes/"
+	for __, descendant in ipairs(child:GetChildren()) do -- Iterates over fruit's children
+		if descendant:IsA("MeshPart") and string.sub(descendant.Name, 1, 7) == "Meshes/" then
+			meshesName = string.sub(descendant.Name, 8, #descendant.Name) -- Keep the fruit name after "Meshes/"
+
+			break
+		end
+	end
+
+	if meshesName then -- If we got the fruit's name
+		addLabel(child, meshesName, Color3.fromRGB(255, 255, 0))
+	else -- It's possible that the fruit didn't have it and therefore no name
+		addLabel(child, nil, Color3.fromRGB(255, 255, 0))
+	end
+
+	toScreen("A fruit has spawned", 10, Color3.fromRGB(0, 255, 255))
+end
+
+-- To be called when a fruit is dropped (BLOXFRUITS)
+local function fruitDropped(child)
+	if child.ClassName == "Tool" then -- Dropped fruits are tools
+		if not child:FindFirstChild("BillboardGui") then
+			if child:FindFirstChild("Fruit") then -- Dropped fruits can't be searched by name, but they have a child called "Fruit"
+				addLabel(child, nil, Color3.fromRGB(0, 0, 255))
+
+				toScreen("A fruit has been dropped", 10, Color3.fromRGB(255, 0, 255))
+			end
+		else
+			child.BillboardGui:Destroy() -- Disables ESP if the function is called when turning off ESP
+		end
+	end
+end
 
 -- Enables/disables the ESP when ESP switch is clicked
 switch.Activated:Connect(function()
+
 	-- Adds/removes the label to existent children if their name is one of targetsNames
 	for _, child in ipairs(workspace:GetChildren()) do
 		if targetsNames[child.Name] then
-			if child:FindFirstChild("BillboardGui") == nil then
+			if not child:FindFirstChild("BillboardGui") then
 				if gameName == "Blox Fruits" then
-					local meshesName 
-
-					for __, descendant in ipairs(child:GetChildren()) do
-						if descendant:IsA("MeshPart") and string.sub(descendant.Name, 1, 7) == "Meshes/" then
-							meshesName = string.sub(descendant.Name, 8, #descendant.Name)
-
-							break
-						end
-					end
-
-					if meshesName then
-						addLabel(child, meshesName, Color3.fromRGB(255, 255, 0))
-					else
-						addLabel(child, nil, Color3.fromRGB(255, 255, 0))
-					end
-
-					toScreen("A fruit has spawned", 10, Color3.fromRGB(255, 255, 255))
+					fruitSpawned(child)
 				else
 					addLabel(child, nil, Color3.fromRGB(255, 255, 0))
 				end
 			else
-				child.BillboardGui:Destroy()
+				child.BillboardGui:Destroy() -- Disables ESP if the function is called when turning off ESP
 			end
 
-		-- On Blox Fruits I want to add/remove the label to tools with a
-		-- child named "Fruits", because thats how dropped fruits are there
-		elseif gameName == "Blox Fruits" and child.ClassName == "Tool" then
-			if child:FindFirstChild("BillboardGui") == nil then
-				if child:FindFirstChild("Fruits") then
-					addLabel(child, nil, Color3.fromRGB(0, 0, 255))
-				end
-			else
-				child.BillboardGui:Destroy()
-			end
+		-- On Blox Fruits I want to add/remove the label to fruits dropped and they don't have predictable names
+		elseif gameName == "Blox Fruits" then -- so we call the function to handle that
+			fruitDropped(child)
 		end
 	end
 
@@ -150,33 +170,18 @@ switch.Activated:Connect(function()
 
 		-- Connect the event and start the listening
 		workspaceConnection = workspace.ChildAdded:Connect (function(child)
-			-- Adds label to the child added if it's name is one of targetsNames or if the game is Blox Fruits and the child is a Tool and has a the name "Fruit"
+			
+			-- Adds label to the child added if it's name is one of targetsNames
 			if targetsNames[child.Name] then
 				if gameName == "Blox Fruits" then
-					local meshesName 
-
-					for __, descendant in ipairs(child:GetChildren()) do
-						if descendant:IsA("MeshPart") and string.sub(descendant.Name, 1, 7) == "Meshes/" then
-							meshesName = string.sub(descendant.Name, 8, #descendant.Name)
-
-							break
-						end
-					end
-
-					if meshesName then
-						addLabel(child, meshesName, Color3.fromRGB(255, 255, 0))
-					else
-						addLabel(child, nil, Color3.fromRGB(255, 255, 0))
-					end
-
-					toScreen("A fruit has spawned", 10, Color3.fromRGB(255, 255, 255))
+					fruitSpawned(child)
 				else
 					addLabel(child, nil, Color3.fromRGB(255, 255, 0))
 				end
-			elseif gameName == "Blox Fruits" and child.ClassName == "Tool" then
-				if child:FindFirstChild("BillboardGui") == nil and child:FindFirstChild("Fruit") then
-					addLabel(child, nil, Color3.fromRGB(0, 0, 255))
-				end
+
+			-- On Blox Fruits I want to add/remove the label to fruits dropped and they don't have predictable names
+			elseif gameName == "Blox Fruits" then -- so we call the function to handle that
+				fruitDropped(child)
 			end
 		end)
 	end
