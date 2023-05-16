@@ -54,6 +54,7 @@ local function toScreen(text, time, color)
 	local label = Instance.new("TextLabel")
 	label.Text = text
 	label.TextColor3 = color
+	label.FontSize = Enum.FontSize.Size14
 	label.RichText = true
 	label.BackgroundTransparency = 1
 	label.Position = UDim2.new(0.5, 0, 0.7, 0)
@@ -93,8 +94,6 @@ gui.Parent = playerGui
 -- Creates the switch to turn the ESP on/off
 local switch = createSwitch()
 
-toScreen("The script has been started", 10, Color3.fromRGB(0, 255, 0))
-
 -- Variable to keep the connection, so after we can disconnect
 local workspaceConnection
 
@@ -102,12 +101,15 @@ local workspaceConnection
 local function fruitSpawned(child) -- Child = Fruit
 	local meshesName -- Spawned fruits have their name on a MeshPart
 
+	wait(2) -- Wait for children to born (I think that fixes fruits spawning without name)
+
 	-- The MeshPart is a children of the fruit and the name is like Meshes/fruitsname_34
 	for __, descendant in ipairs(child:GetChildren()) do -- Iterates over fruit's children
 		if descendant:IsA("MeshPart") and string.sub(descendant.Name, 1, 7) == "Meshes/" then
 			local i, j = string.find(descendant.Name, "_") -- Gets the index of "_"
 
 			meshesName = string.sub(descendant.Name, 8, i - 1) -- Keep the fruit name after "Meshes/" and before "_"
+			meshesName = meshesName:gsub("^%l", string.upper) .. " Fruit"
 
 			break
 		end
@@ -184,5 +186,7 @@ switch.Activated:Connect(function()
 		elseif gameName == "Blox Fruits" then -- so we call the function to handle that
 			fruitDropped(child)
 		end
-	end	
+	end
 end)
+
+toScreen("The script has been started", 10, Color3.fromRGB(0, 255, 0))
