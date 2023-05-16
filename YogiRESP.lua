@@ -100,14 +100,14 @@ local workspaceConnection
 
 -- To be called when a fruit spawns (BLOXFRUITS)
 local function fruitSpawned(child) -- Child = Fruit
-	wait(5) -- Wait a little bit because maybe the fruit children weren't created yet (hypothesis)
-
 	local meshesName -- Spawned fruits have their name on a MeshPart
 
-	-- The MeshPart is a children of the fruit and the name starts with "Meshes/"
+	-- The MeshPart is a children of the fruit and the name is like Meshes/fruitsname_34
 	for __, descendant in ipairs(child:GetChildren()) do -- Iterates over fruit's children
 		if descendant:IsA("MeshPart") and string.sub(descendant.Name, 1, 7) == "Meshes/" then
-			meshesName = string.sub(descendant.Name, 8, #descendant.Name) -- Keep the fruit name after "Meshes/"
+			local i, j = string.find(descendant.Name, "_") -- Gets the index of "_"
+
+			meshesName = string.sub(descendant.Name, 8, i - 1) -- Keep the fruit name after "Meshes/" and before "_"
 
 			break
 		end
@@ -140,25 +140,6 @@ end
 -- Enables/disables the ESP when ESP switch is clicked
 switch.Activated:Connect(function()
 
-	-- Adds/removes the label to existent children if their name is one of targetsNames
-	for _, child in ipairs(workspace:GetChildren()) do
-		if targetsNames[child.Name] then
-			if not child:FindFirstChild("BillboardGui") then
-				if gameName == "Blox Fruits" then
-					fruitSpawned(child)
-				else
-					addLabel(child, nil, Color3.fromRGB(255, 255, 0))
-				end
-			else
-				child.BillboardGui:Destroy() -- Disables ESP if the function is called when turning off ESP
-			end
-
-		-- On Blox Fruits I want to add/remove the label to fruits dropped and they don't have predictable names
-		elseif gameName == "Blox Fruits" then -- so we call the function to handle that
-			fruitDropped(child)
-		end
-	end
-
 	-- Enables/disables the workspace connection listening for children added 
 	if workspaceConnection then -- check if we are connected
 		switch.TextLabel.Text = "ESP (OFF)"
@@ -185,4 +166,23 @@ switch.Activated:Connect(function()
 			end
 		end)
 	end
+
+	-- Adds/removes the label to existent children if their name is one of targetsNames
+	for _, child in ipairs(workspace:GetChildren()) do
+		if targetsNames[child.Name] then
+			if not child:FindFirstChild("BillboardGui") then
+				if gameName == "Blox Fruits" then
+					fruitSpawned(child)
+				else
+					addLabel(child, nil, Color3.fromRGB(255, 255, 0))
+				end
+			else
+				child.BillboardGui:Destroy() -- Disables ESP if the function is called when turning off ESP
+			end
+
+		-- On Blox Fruits I want to add/remove the label to fruits dropped and they don't have predictable names
+		elseif gameName == "Blox Fruits" then -- so we call the function to handle that
+			fruitDropped(child)
+		end
+	end	
 end)
