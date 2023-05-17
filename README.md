@@ -29,6 +29,8 @@ Basicamente permite ao jogador localizar objetos distantes/através de paredes.
 
 <h2>Como utilizar:</h2>
 
+<a href="https://github.com/euyogi/Prototipo-YogiRESP/releases/download/permanent/YogiRESP.txt">Baixe aqui</a>
+
 <h4>No seu jogo/projeto:</h4>
 
 Para que todos os jogadores tenham acesso você pode inserir um script em StarterPlayer/StarterPlayerScript e colar o código no script
