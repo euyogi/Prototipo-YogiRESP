@@ -200,5 +200,3 @@ switch.Activated:Connect(function()
 end)
 
 toScreen("The script has been started", nil, Color3.fromRGB(0, 255, 0))
-
--- By Yogi
