@@ -23,9 +23,9 @@ Basicamente permite ao jogador localizar objetos distantes/através de paredes.
 
 <h2>Fotos do script em jogo:</h2>
 
-![Duas frutas dropadas no chão](https://github.com/euyogi/Prototipo-YogiRESP/assets/46427886/790c1418-49b3-4f3f-9073-f76a1b362325)
-![Uma fruta spawnada de longe](https://github.com/euyogi/Prototipo-YogiRESP/assets/46427886/e38c76b3-80a3-4639-8e9a-8fe5c0986d77)
-![Uma fruta spawnada de perto](https://github.com/euyogi/Prototipo-YogiRESP/assets/46427886/0db3d0d8-e888-4ef3-a651-15eaa18b6bf2)
+![Duas frutas dropadas no chão](https://github.com/euyogi/Prototipo-YogiRESP/assets/46427886/3f0e2a95-c123-4439-a095-f7886a72de3d)
+![Uma fruta spawnada de longe](https://github.com/euyogi/Prototipo-YogiRESP/assets/46427886/f7c5c246-4621-4468-b9f9-d9063a77c3b0)
+![Uma fruta spawnada de perto](https://github.com/euyogi/Prototipo-YogiRESP/assets/46427886/9e578bc0-c4a6-47c2-ab52-4a4634ae6e2d)
 
 <h2>Como utilizar:</h2>
 
