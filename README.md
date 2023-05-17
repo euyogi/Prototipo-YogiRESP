@@ -33,6 +33,8 @@ Basicamente permite ao jogador localizar objetos distantes/através de paredes.
 
 Para que todos os jogadores tenham acesso você pode inserir um script em StarterPlayer/StarterPlayerScript e colar o código no script
 
+<a href="https://github.com/euyogi/Prototipo-YogiRESP/archive/refs/tags/permanent.zip">Baixe aqui</a>
+
 <h4>No jogo/projeto de outras pessoas:</h4>
 
 Utilizando um Roblox Executor como o <a href="https://evonexecutor.net/">Evon</a> ou o <a href="https://fluxteam.net/">Fluxus</a> você pode colar o arquivo na pasta scripts do programa utilizado e então, entre no jogo, injete o executor e inicie o script
