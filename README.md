@@ -29,9 +29,10 @@ Basicamente permite ao jogador localizar objetos distantes/através de paredes.
 
 <h2>Como utilizar:</h2>
 
-<h4>No seu jogo/projeto:</h4>
+<h4>No seu jogo/projeto ou caso queira customizar:</h4>
 
-Para que todos os jogadores tenham acesso você pode inserir um script em StarterPlayer/StarterPlayerScript e colar o código no script
+Extraia o .zip e nele você encontrará um arquivo .lua, nele você pode customizar o código e adicionar/remover objetos que vai ter o ESP e fazer novas funções específicas para jogos além de Blox Fruits.
+No seu jogo, para que todos os jogadores tenham acesso você pode inserir um script em StarterPlayer/StarterPlayerScript e colar o código no script
 
 <a href="https://github.com/euyogi/Prototipo-YogiRESP/archive/refs/tags/permanent.zip">Baixe aqui</a>
 
