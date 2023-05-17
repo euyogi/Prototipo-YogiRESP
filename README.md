@@ -33,6 +33,6 @@ Para que todos os jogadores tenham acesso você pode inserir um script em Starte
 
 <h4>No jogo/projeto de outras pessoas:</h4>
 
-Utilizando um Roblox Executor você pode colar o arquivo na pasta scripts do programa utilizado e então, entre no jogo, injete o executor e inicie o script
+Utilizando um Roblox Executor como o <a href="https://evonexecutor.net/">Evon</a> ou o <a href="https://fluxteam.net/">Fluxus</a> você pode colar o arquivo na pasta scripts do programa utilizado e então, entre no jogo, injete o executor e inicie o script
 
 <b>Não me responsabilizo pelas consequências ao usuário, devido ao uso do script junto a um injetor em jogos do Roblox que não sejam de sua autoria. Visto que, pode não ser permitido pela empresa/criador.</b>
