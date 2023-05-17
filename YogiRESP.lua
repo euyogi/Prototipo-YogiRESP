@@ -4,6 +4,13 @@ local targetsNames = {["Fruit"] = true, ["Fruit "] = true}
 local gameName = string.sub(game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name, 1, #targetGameName)
 local playerGui = game.Players.LocalPlayer.PlayerGui
 
+-- Creates a screen gui for our script stuff
+local function createGui()
+	local gui = Instance.new("ScreenGui")
+	gui.Name = "scrGui"
+	gui.Parent = playerGui
+end
+
 -- The switch to turn the ESP on/off
 local function createSwitch()
 	local switch
@@ -51,6 +58,9 @@ end
 
 -- Shows temporarily text at the middle of the screen
 local function toScreen(text, time, color)
+	local time = time or 10
+	local color = color or Color3.fromRGB(255, 255, 255)
+
 	local label = Instance.new("TextLabel")
 	label.Text = text
 	label.TextColor3 = color
@@ -70,6 +80,8 @@ end
 -- Adds text to thing, you can see it through walls (ESP)
 local function addLabel(thing, name, color)
 	local name = name or thing.Name
+	local color = color or Color3.fromRGB(255, 255, 255)
+
 	local size = UDim2.fromOffset(100, 25)
 
 	local billboard = Instance.new("BillboardGui")
@@ -86,10 +98,8 @@ local function addLabel(thing, name, color)
 	label.Parent = billboard
 end
 
--- Creates a screen gui for our script stuff, this can't be removed because createSwitch and toScreen depends on it
-local gui = Instance.new("ScreenGui")
-gui.Name = "scrGui"
-gui.Parent = playerGui
+-- this can't be removed because createSwitch and toScreen depends on it
+createGui()
 
 -- Creates the switch to turn the ESP on/off
 local switch = createSwitch()
@@ -101,7 +111,7 @@ local workspaceConnection
 local function fruitSpawned(child) -- Child = Fruit
 	local meshesName -- Spawned fruits have their name on a MeshPart
 
-	wait(2) -- Wait for children to born (I think that fixes fruits spawning without name)
+	wait(1) -- Wait for children to born (I think that fixes fruits spawning without name)
 
 	-- The MeshPart is a children of the fruit and the name is like Meshes/fruitsname_34
 	for __, descendant in ipairs(child:GetChildren()) do -- Iterates over fruit's children
@@ -121,7 +131,7 @@ local function fruitSpawned(child) -- Child = Fruit
 		addLabel(child, nil, Color3.fromRGB(255, 255, 0))
 	end
 
-	toScreen("A fruit has spawned", 10, Color3.fromRGB(0, 255, 255))
+	toScreen("A " .. meshesName .. " has spawned", nil, Color3.fromRGB(0, 255, 255))
 end
 
 -- To be called when a fruit is dropped (BLOXFRUITS)
@@ -131,7 +141,7 @@ local function fruitDropped(child)
 			if child:FindFirstChild("Fruit") then -- Dropped fruits can't be searched by name, but they have a child called "Fruit"
 				addLabel(child, nil, Color3.fromRGB(0, 0, 255))
 
-				toScreen("A fruit has been dropped", 10, Color3.fromRGB(255, 0, 255))
+				toScreen("A " .. child.Name .. " has been dropped", nil, Color3.fromRGB(255, 0, 255))
 			end
 		else
 			child.BillboardGui:Destroy() -- Disables ESP if the function is called when turning off ESP
@@ -189,4 +199,4 @@ switch.Activated:Connect(function()
 	end
 end)
 
-toScreen("The script has been started", 10, Color3.fromRGB(0, 255, 0))
+toScreen("The script has been started", nil, Color3.fromRGB(0, 255, 0))
